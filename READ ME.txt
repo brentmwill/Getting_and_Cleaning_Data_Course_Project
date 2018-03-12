@@ -1,0 +1,63 @@
+==================================================================
+Cleaning, Combining, and Tidying of the "Human Activity 
+Recognition Using Smartphones" Dataset
+Version 1.0
+==================================================================
+Brent M. Will
+==================================================================
+The original data were collected and organized by: 
+
+Jorge L. Reyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto.
+Smartlab - Non Linear Complex Systems Laboratory
+DITEN - Università degli Studi di Genova.
+Via Opera Pia 11A, I-16145, Genoa, Italy.
+activityrecognition@smartlab.ws
+www.smartlab.ws
+==================================================================
+
+The goal of this project is to generate a single data set 
+containing both the training and the testing data, reduced to the 
+rows to a single observation of user-activity and retaining only 
+the columns pertaining to means or standard deviations of the 
+features. 
+
+Tidy data is a structure of data that is designed to provide a 
+standardized way of linking the structure of a dataset to its 
+meaning, as defined within the tidyr package. In tidy data: 
+
+	1. Each variable forms a column. 
+	2. Each observation forms a row. 
+	3. Each observational unit forms a table. 
+
+In the original project, the main inconsistency with respect to 
+the tidy data framework is that there are multiple observations per 
+user-activity, e.g. numerous rows of User 1's observed WALKING 
+activity. To tidy the data, the data will be merged into a single 
+row for each user/activity, with each row representing the mean 
+of the observations for that user. 
+
+Each record contains: 
+======================================
+
+- Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration.
+- Triaxial Angular velocity from the gyroscope. 
+- A 79-feature vector with the mean of time and frequency domain variables across that activity. 
+- Its activity label. 
+- An identifier of the subject who carried out the experiment.
+
+Notes: 
+======
+- Features are normalized and bounded within [-1,1].
+- Each row is a mean of the feature vectors for an individual's observation for the given activity.
+
+For more information about this dataset contact: activityrecognition@smartlab.ws
+
+License:
+========
+Use of this dataset in publications must be acknowledged by referencing the following publication [1] 
+
+[1] Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012
+
+This dataset is distributed AS-IS and no responsibility implied or explicit can be addressed to the authors or their institutions for its use or misuse. Any commercial use is prohibited.
+
+Jorge L. Reyes-Ortiz, Alessandro Ghio, Luca Oneto, Davide Anguita. November 2012.
