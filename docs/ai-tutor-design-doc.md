@@ -85,6 +85,8 @@ The design commitments below are the "why" behind the product mechanics. An idea
 
 Everything in the product is one of these seven verbs. The loop never terminates: "course complete" transitions a course from *acquisition mode* to *maintenance mode*; it never leaves the system.
 
+**Session shape — mobile-first micro-sessions.** The product's primary surface is a phone, and the unit of engagement is a 5–15 minute session. This is a design constraint on everything downstream, not a UI detail: every lesson must decompose into micro-units that are individually completable, every interaction must be **interruptible and resumable** (state saved mid-dialogue, mid-exercise), and a session must be able to open cold with zero setup — the orchestrator decides in advance what the next 10 minutes should contain (new material, review, or remediation) so the learner just opens the app and starts. Micro-sessions are also pedagogically aligned: they force distributed practice over massed practice, and they make the daily review habit (§4.7) and the lesson habit the *same* habit. Longer deep-work sessions (extended projects, long readings) remain supported but are the exception; the design treats them as optional intensity, not the default.
+
 ### 4.2 Enrollment & goal intake
 
 The learner states a goal in natural language. The system conducts a short **goal interview** to establish:
@@ -119,10 +121,10 @@ From the charter + diagnostic, the planner generates a full syllabus: units → 
 
 Four modalities, chosen per-lesson by the planner based on concept type, learner preference, and evidence quality needed. A course mixes all four.
 
-1. **Socratic dialogue.** Conversational tutoring: the tutor probes, poses cases, asks the learner to predict/explain/defend, and adapts in real time. Best for conceptual material and misconception repair. Every dialogue is also assessment — the tutor emits evidence about the learner's understanding as it goes.
-2. **Generated reading + exercises.** A personalized expository lesson (tailored to the profile: examples from the learner's profession, building on what they know) followed by retrieval exercises spanning recognition → recall → application. Best for foundational/declarative material and learner-paced study.
-3. **Applied projects.** Authentic tasks graded against rubrics: run a causal analysis on a provided dataset and defend the identification strategy; write 800 words comparing Hume and Kant on causation. Best for integration, transfer, and honest summative evidence. Rubric-based AI grading with concrete, actionable feedback and a revise-and-resubmit loop.
-4. **Curated external content.** For citation-heavy, contested, or aesthetic material, the system curates real sources (papers, book chapters, lectures, videos), tells the learner *why this source and what to look for*, then debriefs and assesses via dialogue afterward. The AI is the guide and examiner, not the sole author.
+1. **Socratic dialogue.** Conversational tutoring: the tutor probes, poses cases, asks the learner to predict/explain/defend, and adapts in real time. Best for conceptual material and misconception repair. Every dialogue is also assessment — the tutor emits evidence about the learner's understanding as it goes. This is the most naturally mobile modality — chat is a native phone interaction, and voice input/output makes it usable hands-free.
+2. **Generated reading + exercises.** A personalized expository lesson (tailored to the profile: examples from the learner's profession, building on what they know) followed by retrieval exercises spanning recognition → recall → application. Best for foundational/declarative material and learner-paced study. On mobile, readings are authored as a sequence of screen-sized segments with retrieval checks interleaved every few segments — never a wall of text with a quiz at the end.
+3. **Applied projects.** Authentic tasks graded against rubrics: run a causal analysis on a provided dataset and defend the identification strategy; write 800 words comparing Hume and Kant on causation. Best for integration, transfer, and honest summative evidence. Rubric-based AI grading with concrete, actionable feedback and a revise-and-resubmit loop. Projects are the one modality that doesn't compress into a micro-session, so they are designed as **multi-session arcs**: decomposed into small steps (plan → draft → analyze → defend), each step assignable to a session, with the option to do the heavy artifact work on a desktop and the planning/defense/feedback steps on the phone.
+4. **Curated external content.** For citation-heavy, contested, or aesthetic material, the system curates real sources (papers, book chapters, lectures, videos), tells the learner *why this source and what to look for*, then debriefs and assesses via dialogue afterward. The AI is the guide and examiner, not the sole author. This pairs well with mobile reality: the reading/watching often happens elsewhere (a book, a lecture on a commute); the app's job is the assignment brief beforehand and the debrief dialogue after.
 
 **Selection heuristics:** declarative foundations → readings; conceptual subtlety or detected misconception → Socratic; integration milestones (unit ends) → projects; contested/primary-source material → curated content. The learner can always override ("just talk me through it").
 
@@ -153,7 +155,7 @@ The differentiating subsystem. Two layers over one knowledge state:
 - Every concept (in-progress or completed courses alike) carries a memory model: stability, difficulty, predicted recall probability (FSRS-class scheduling).
 - A daily **review queue** mixes due concepts *across all courses* — interleaving is a feature, not a bug.
 - Reviews are retrieval-based and varied: not the same flashcard each time, but regenerated prompts — a recall question today, a mini-application next month, "explain it to a colleague" after that. Variation is what turns SRS from memorization into durable understanding.
-- Review sessions are short (5–15 min) and the natural daily-habit surface of the product.
+- Review sessions are short (5–15 min) and — being the ideal micro-session — the backbone of the daily mobile habit. A typical day's session opens with due reviews and flows into new material, making review and lesson one continuous habit rather than two chores.
 
 **Layer 2 — Periodic holistic retention checks.**
 - On a decaying schedule after course completion (e.g., ~1, 3, 6, 12 months), a richer mixed assessment of the whole course: integrative questions, novel applications, a short synthesis task.
@@ -171,7 +173,7 @@ The differentiating subsystem. Two layers over one knowledge state:
 
 ### 4.9 Motivation & habit (deliberately light in v1)
 
-For a motivated personal user: streak-free, guilt-free design. A daily review nudge, session-end summaries of what strengthened, visible movement on the concept map, and honest "time to goal" projections. No badges, leagues, or engagement mechanics; if the product later serves broader consumers, this section gets rebuilt intentionally rather than bolted on.
+For a motivated personal user: streak-free, guilt-free design. Mobile-first raises the stakes here — the phone is where habits live, and push notifications are the natural delivery for "your reviews are due." The line held in v1: one restrained, configurable daily nudge tied to the review queue; session-end summaries of what strengthened; visible movement on the concept map; honest "time to goal" projections. No badges, leagues, or engagement mechanics; if the product later serves broader consumers, this section gets rebuilt intentionally rather than bolted on.
 
 ### 4.10 Professional upskilling extensions (v2 sketch)
 
@@ -187,8 +189,8 @@ For a motivated personal user: streak-free, guilt-free design. A daily review nu
 ### 5.1 Component overview
 
 ```
-┌────────────────────────  Client (web-first; mobile = review surface)  ───────────────────────┐
-│   Chat/lesson surface · Concept map · Syllabus editor · Review queue · Project workspace     │
+┌────────────────  Client (mobile-first micro-sessions; web = deep-work surface)  ─────────────┐
+│   Chat/lesson surface · Review queue · Concept map · Syllabus editor · Project workspace     │
 └──────────────────────────────────────────┬───────────────────────────────────────────────────┘
                                            │  API
 ┌──────────────────────────────────────────▼───────────────────────────────────────────────────┐
@@ -240,7 +242,9 @@ The essential architectural commitment: **separate the pedagogical roles.** Plan
 
 ### 5.4 Scheduling infrastructure
 
-Retention requires the system to act *when the learner is absent*: a scheduler computes daily review queues, fires retention checks on the course calendar, and issues (configurable, restrained) nudges. This is a real background-jobs requirement — a purely request-driven app cannot deliver the retention promise.
+Retention requires the system to act *when the learner is absent*: a scheduler computes daily review queues, fires retention checks on the course calendar, and issues (configurable, restrained) push nudges. This is a real background-jobs requirement — a purely request-driven app cannot deliver the retention promise.
+
+Mobile-first adds a second job for the same infrastructure: **session pre-composition**. Because sessions are short and opened opportunistically (a spare ten minutes in a queue), the scheduler pre-assembles the next session's contents — due reviews, the next micro-lesson, any pending remediation — ahead of time, so opening the app costs zero planning latency. Mid-session state (dialogue position, partial exercise answers) is persisted continuously so an interrupted session resumes exactly where it stopped.
 
 ### 5.5 Quality, evals & telemetry
 
@@ -259,11 +263,11 @@ The learner model is intimate data (abilities, gaps, profession, goals). Require
 
 ## 6. Scope & Phasing
 
-**Phase 1 — the loop, single-user (the v1 bar):** goal intake + charter, diagnostic, living syllabus over a concept graph, Socratic + reading/exercise lessons, formative + unit assessment, knowledge tracer, SRS review queue, honest concept-map display. *If the retention layer is missing, it is not this product yet.*
+**Phase 1 — the loop, single-user (the v1 bar):** goal intake + charter, diagnostic, living syllabus over a concept graph, Socratic + reading/exercise lessons in micro-session form (resumable, pre-composed), formative + unit assessment, knowledge tracer, SRS review queue with push nudges, honest concept-map display. Delivered mobile-first — a well-built responsive web app/PWA on a phone qualifies; native polish does not gate v1. *If the retention layer is missing, it is not this product yet.*
 
-**Phase 2 — depth:** applied projects with rubric grading, curated external content, periodic holistic retention checks with remediation, calibration view, profile maintenance loop, eval suite.
+**Phase 2 — depth:** applied projects with rubric grading (multi-session arcs), curated external content, periodic holistic retention checks with remediation, calibration view, profile maintenance loop, eval suite, a desktop deep-work surface for projects and long-form work.
 
-**Phase 3 — product:** multi-user, mobile review surface, shared/canonical concept graphs, professional-upskilling features (§4.10), motivation layer redesigned for a broad audience.
+**Phase 3 — product:** multi-user, shared/canonical concept graphs, professional-upskilling features (§4.10), motivation layer redesigned for a broad audience.
 
 ---
 
@@ -305,6 +309,7 @@ Score an existing project against the ideal state. Each dimension: **0** absent 
 | A18 | Factuality controls | Grounded generation / curation for high-risk domains; consensus vs contested distinguished | 1 |
 | A19 | Privacy & learner data rights | Inspectable/exportable/correctable learner model | 1 |
 | A20 | Phasing discipline | Loop-first scope; retention not deferred; v2 features not crowding out v1 core | 1 |
+| A21 | Micro-session & resumability design | Mobile-first 5–15 min sessions; lessons decompose into completable micro-units; mid-session state persisted; next session pre-composed | 2 |
 
 **Scoring:** weighted sum / (3 × Σweights) → percentage. Suggested reading: **<40%** a lesson generator, not yet a tutor; **40–70%** a tutor without a memory — the acquisition loop exists but the retention promise doesn't; **>70%** the core product thesis is realized; remaining gaps are depth, not kind.
 
@@ -312,4 +317,4 @@ The highest-leverage question when evaluating any implementation: **A9 + A10 + A
 
 ## Appendix B — Example Stack Instantiation (non-normative)
 
-One concrete way to build §5, purely illustrative; the reference design is the contract, not these choices. Web client (React/Next.js) with a chat-centric lesson surface and an interactive concept-map view · API + orchestrator in a typed server runtime (TypeScript/Node or Python/FastAPI) · Postgres for profiles/courses/graphs/evidence log (append-only table + materialized knowledge-state view) · a job runner (e.g., Temporal, or cron + queue) for the scheduler · LLM access through a thin provider-agnostic layer with structured-output validation (JSON Schema), strongest model tier for planner/tutor/grader, small model tier for review-item generation · FSRS library for memory scheduling · trace logging of all LLM calls to an observability store with an offline eval harness (persona scripts + golden grading sets) run in CI.
+One concrete way to build §5, purely illustrative; the reference design is the contract, not these choices. Mobile-first client as a PWA or React Native app — chat-centric lesson surface, review queue as the home screen, interactive concept-map view; push notifications for review nudges; local persistence of mid-session state for interrupt/resume · API + orchestrator in a typed server runtime (TypeScript/Node or Python/FastAPI) · Postgres for profiles/courses/graphs/evidence log (append-only table + materialized knowledge-state view) · a job runner (e.g., Temporal, or cron + queue) for the scheduler · LLM access through a thin provider-agnostic layer with structured-output validation (JSON Schema), strongest model tier for planner/tutor/grader, small model tier for review-item generation · FSRS library for memory scheduling · trace logging of all LLM calls to an observability store with an offline eval harness (persona scripts + golden grading sets) run in CI.
